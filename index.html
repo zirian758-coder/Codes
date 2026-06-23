@@ -8,13 +8,15 @@
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#003A70">
 
+  <!-- iPhone ikon -->
   <link rel="apple-touch-icon" href="codes-192.png">
 
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f2f2f2;
+      background: #003A70; /* Dachser kék */
+      color: white;
     }
 
     header {
@@ -25,6 +27,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      border-bottom: 2px solid #FFC800;
     }
 
     #backBtn {
@@ -48,24 +51,108 @@
       padding: 15px;
       font-size: 18px;
       border: none;
-      background: #003A70;
-      color: white;
+      background: #FFC800; /* sárga */
+      color: #003A70;       /* kék szöveg */
       border-radius: 8px;
       cursor: pointer;
+      font-weight: bold;
     }
 
     .step {
-      background: white;
+      background: #FFC800;
       padding: 15px;
       border-radius: 8px;
       font-size: 18px;
-      border-left: 5px solid #003A70;
+      color: #003A70;
+      border-left: 5px solid white;
+      font-weight: bold;
     }
   </style>
 </head>
 
 <body>
 
+<!-- TELEPÍTŐ KÉPERNYŐ -->
+<div id="installScreen" style="
+  background:#003A70;
+  color:white;
+  padding:25px;
+  text-align:center;
+  font-family:Arial;
+">
+  <h2 style="margin-top:0;">Codes – Installation</h2>
+
+  <p style="font-size:18px;">
+    Installiere die App für schnellen Zugriff.
+  </p>
+
+  <button onclick="showInstallHelp()" style="
+    background:#FFC800;
+    color:#003A70;
+    padding:15px 20px;
+    border:none;
+    border-radius:8px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    width:90%;
+    max-width:300px;
+  ">
+    📲 App installieren
+  </button>
+</div>
+
+<div id="installHelp" class="hidden" style="
+  background:#003A70;
+  color:white;
+  padding:25px;
+  text-align:center;
+  font-family:Arial;
+">
+  <h3>iPhone Installation</h3>
+  <p style="font-size:17px;">
+    1. Tippe unten auf das <b>Teilen</b> Symbol.<br>
+    2. Wähle <b>Zum Home-Bildschirm</b>.<br>
+    3. Fertig – die App erscheint auf deinem Startbildschirm.
+  </p>
+
+  <button onclick="hideInstallHelp()" style="
+    background:#FFC800;
+    color:#003A70;
+    padding:12px 20px;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    width:90%;
+    max-width:300px;
+  ">
+    Zurück
+  </button>
+</div>
+
+<script>
+  function showInstallHelp(){
+    document.getElementById('installHelp').classList.remove('hidden');
+  }
+  function hideInstallHelp(){
+    document.getElementById('installHelp').classList.add('hidden');
+  }
+
+  // Telepítő képernyő csak első megnyitáskor jelenjen meg
+  if(localStorage.getItem('codesInstalled') === 'yes'){
+    document.getElementById('installScreen').style.display = 'none';
+  }
+
+  // Ha telepítve van → elrejti
+  window.addEventListener('beforeinstallprompt', () => {
+    localStorage.setItem('codesInstalled', 'yes');
+    document.getElementById('installScreen').style.display = 'none';
+  });
+</script>
+
+<!-- FŐ APP -->
 <header>
   <button id="backBtn" class="hidden" onclick="goBack()">←</button>
   <div id="title">Codes</div>
@@ -98,9 +185,7 @@
     last();
   }
 
-  // -------------------------
-  // WARNEINGANG MENÜ
-  // -------------------------
+  /* --- WARNEINGANG MENÜ --- */
   function openWareneingang(){
     historyStack.push(goHome);
     setTitle('Wareneingang');
@@ -113,9 +198,6 @@
     `);
   }
 
-  // -------------------------
-  // WARNEINGANG PROZESS
-  // -------------------------
   function openWE3(){
     historyStack.push(openWareneingang);
     setTitle('Wareneingang Prozess');
@@ -142,9 +224,6 @@
     openCode15();
   }
 
-  // -------------------------
-  // WARNEINGANG F7 PROZESS
-  // -------------------------
   function openWE_F7(){
     historyStack.push(openWareneingang);
     setTitle('Wareneingang F7 Prozess');
@@ -175,9 +254,7 @@
     openCode15();
   }
 
-  // -------------------------
-  // HALLENAUFNAHME MENÜ
-  // -------------------------
+  /* --- HALLENAUFNAHME MENÜ --- */
   function openHallenaufnahme(){
     historyStack.push(goHome);
     setTitle('5.5.1 – Auswahl');
@@ -195,9 +272,7 @@
     `);
   }
 
-  // -------------------------
-  // 5 – 2. Tour / Freigegeben
-  // -------------------------
+  /* --- CODE 5 --- */
   function openCode5(){
     historyStack.push(openHallenaufnahme);
     setTitle('5 – 2. Tour / Freigegeben');
@@ -217,9 +292,7 @@
     `);
   }
 
-  // -------------------------
-  // 6 – Rausladen
-  // -------------------------
+  /* --- CODE 6 --- */
   function openCode6(){
     historyStack.push(openHallenaufnahme);
     setTitle('6 – Rausladen');
@@ -236,9 +309,7 @@
     `);
   }
 
-  // -------------------------
-  // 7 – Entladen
-  // -------------------------
+  /* --- CODE 7 --- */
   function openCode7(){
     historyStack.push(openHallenaufnahme);
     setTitle('7 – Entladen');
@@ -258,9 +329,7 @@
     `);
   }
 
-  // -------------------------
-  // 8 – Sonderprozess Start
-  // -------------------------
+  /* --- CODE 8 --- */
   function openCode8(){
     historyStack.push(openHallenaufnahme);
     setTitle('8 – Sonderprozess Start');
@@ -279,9 +348,7 @@
     `);
   }
 
-  // -------------------------
-  // 9 – Sonderprozess Ende
-  // -------------------------
+  /* --- CODE 9 --- */
   function openCode9(){
     historyStack.push(openHallenaufnahme);
     setTitle('9 – Sonderprozess Ende');
@@ -300,9 +367,7 @@
     `);
   }
 
-  // -------------------------
-  // 13 – Hallenaufnahme
-  // -------------------------
+  /* --- CODE 13 --- */
   function openCode13(){
     historyStack.push(openHallenaufnahme);
     setTitle('13 – Hallenaufnahme');
@@ -321,9 +386,7 @@
     `);
   }
 
-  // -------------------------
-  // 15 – Platzwechseln
-  // -------------------------
+  /* --- CODE 15 --- */
   function openCode15(){
     setTitle('15 – Platzwechseln');
     showBack(true);
