@@ -90,6 +90,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      counter-reset: step-counter;
     }
 
     .step {
@@ -149,6 +150,7 @@
         <div class="menu-list">
           <button class="menu-btn" onclick="openHallenaufnahme()">1 – Hallenaufnahme</button>
           <button class="menu-btn" onclick="openWareneingang()">2 – Wareneingang</button>
+          <button class="menu-btn" onclick="openVorladen()">3 – Vorladen</button>
         </div>
       `);
     }
@@ -157,6 +159,28 @@
       if(historyStack.length===0){ goHome(); return; }
       const last = historyStack.pop();
       last();
+    }
+
+    /* -------------------------
+       VORLADEN (ÚJ 3. MENÜ)
+    ------------------------- */
+    function openVorladen(){
+      historyStack.push(goHome);
+      setTitle('Vorladen');
+      showBack(true);
+      render(`
+        <div class="steps-list">
+          <div class="step">2 → ENTER</div>
+          <div class="step">02 + Reise‑Nummer (z. B. 021926554) → ENTER</div>
+          <div class="step">2 → ENTER</div>
+          <div class="step">
+            Erste Palette scannen → ENTER<br>
+            <small>(WB‑Barcode scannen – wird nur bei der ersten Palette verlangt)</small>
+          </div>
+          <div class="step">Scanner zeigt die Infos (Tour + Platz) → ENTER</div>
+          <div class="step">Nächste Paletten genauso weiter</div>
+        </div>
+      `);
     }
 
     /* -------------------------
@@ -292,6 +316,7 @@
           <div class="step">1 → ENTER</div>
           <div class="step">6 → ENTER</div>
           <div class="step">Barcode scannen → ENTER</div>
+          <div class="step">Scanner zeigt Info (Tour + Platz) → ENTER</div>
           <div class="step">Brücke‑Nummer eingeben / QR‑Code scannen → ENTER</div>
         </div>
       `);
