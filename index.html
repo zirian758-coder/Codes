@@ -7,15 +7,13 @@
 
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#003A70">
-
-  <!-- iPhone ikon -->
   <link rel="apple-touch-icon" href="codes-192.png">
 
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #003A70; /* Dachser kék */
+      background: #003A70;
       color: white;
     }
 
@@ -30,7 +28,7 @@
       border-bottom: 2px solid #FFC800;
     }
 
-    #backBtn {
+    #homeBtn, #backBtn {
       background: none;
       border: none;
       color: white;
@@ -51,8 +49,8 @@
       padding: 15px;
       font-size: 18px;
       border: none;
-      background: #FFC800; /* sárga */
-      color: #003A70;       /* kék szöveg */
+      background: #FFC800;
+      color: #003A70;
       border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
@@ -67,47 +65,63 @@
       border-left: 5px solid white;
       font-weight: bold;
     }
+
+    /* TELEPÍTŐ OVERLAY */
+    #installOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.75);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    #installBox {
+      background: #003A70;
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      width: 85%;
+      max-width: 350px;
+      border: 2px solid #FFC800;
+    }
+
+    #installBtn, #closeInstall {
+      background: #FFC800;
+      color: #003A70;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
   </style>
 </head>
 
 <body>
 
-<!-- TELEPÍTŐ KÉPERNYŐ -->
-<div id="installScreen" style="
-  background:#003A70;
-  color:white;
-  padding:25px;
-  text-align:center;
-  font-family:Arial;
-">
-  <h2 style="margin-top:0;">Codes – Installation</h2>
+<!-- TELEPÍTŐ OVERLAY -->
+<div id="installOverlay">
+  <div id="installBox">
+    <h2>Codes installieren</h2>
+    <p>Füge die App zum Home-Bildschirm hinzu.</p>
 
-  <p style="font-size:18px;">
-    Installiere die App für schnellen Zugriff.
-  </p>
-
-  <button onclick="showInstallHelp()" style="
-    background:#FFC800;
-    color:#003A70;
-    padding:15px 20px;
-    border:none;
-    border-radius:8px;
-    font-size:18px;
-    font-weight:bold;
-    cursor:pointer;
-    width:90%;
-    max-width:300px;
-  ">
-    📲 App installieren
-  </button>
+    <button id="installBtn" onclick="showIOSHelp()">📲 Anleitung anzeigen</button>
+    <button id="closeInstall" onclick="closeInstaller()">Später</button>
+  </div>
 </div>
 
-<div id="installHelp" class="hidden" style="
-  background:#003A70;
-  color:white;
-  padding:25px;
-  text-align:center;
-  font-family:Arial;
+<!-- iPhone telepítési segítség -->
+<div id="iosHelp" class="hidden" style="
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background:#003A70; color:white; padding:25px; text-align:center; z-index:9999;
 ">
   <h3>iPhone Installation</h3>
   <p style="font-size:17px;">
@@ -116,44 +130,35 @@
     3. Fertig – die App erscheint auf deinem Startbildschirm.
   </p>
 
-  <button onclick="hideInstallHelp()" style="
-    background:#FFC800;
-    color:#003A70;
-    padding:12px 20px;
-    border:none;
-    border-radius:8px;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-    width:90%;
-    max-width:300px;
-  ">
-    Zurück
-  </button>
+  <button onclick="hideIOSHelp()" style="
+    background:#FFC800; color:#003A70; padding:12px 20px;
+    border:none; border-radius:8px; font-size:16px; font-weight:bold; cursor:pointer;
+  ">Zurück</button>
 </div>
 
 <script>
-  function showInstallHelp(){
-    document.getElementById('installHelp').classList.remove('hidden');
-  }
-  function hideInstallHelp(){
-    document.getElementById('installHelp').classList.add('hidden');
+  function closeInstaller(){
+    document.getElementById('installOverlay').style.display = 'none';
+    localStorage.setItem('codesInstallShown', 'yes');
   }
 
-  // Telepítő képernyő csak első megnyitáskor jelenjen meg
-  if(localStorage.getItem('codesInstalled') === 'yes'){
-    document.getElementById('installScreen').style.display = 'none';
+  function showIOSHelp(){
+    document.getElementById('iosHelp').classList.remove('hidden');
   }
 
-  // Ha telepítve van → elrejti
-  window.addEventListener('beforeinstallprompt', () => {
-    localStorage.setItem('codesInstalled', 'yes');
-    document.getElementById('installScreen').style.display = 'none';
-  });
+  function hideIOSHelp(){
+    document.getElementById('iosHelp').classList.add('hidden');
+  }
+
+  // Telepítő csak egyszer jelenjen meg
+  if(localStorage.getItem('codesInstallShown') === 'yes'){
+    document.getElementById('installOverlay').style.display = 'none';
+  }
 </script>
 
 <!-- FŐ APP -->
 <header>
+  <button id="homeBtn" onclick="goHome()">🏠</button>
   <button id="backBtn" class="hidden" onclick="goBack()">←</button>
   <div id="title">Codes</div>
 </header>
@@ -165,6 +170,7 @@
 
   function setTitle(t){ document.getElementById('title').textContent = t; }
   function showBack(b){ document.getElementById('backBtn').classList.toggle('hidden', !b); }
+
   function render(html){ document.getElementById('content').innerHTML = html; }
 
   function goHome(){
@@ -185,7 +191,7 @@
     last();
   }
 
-  /* --- WARNEINGANG MENÜ --- */
+  /* --- MENÜK --- */
   function openWareneingang(){
     historyStack.push(goHome);
     setTitle('Wareneingang');
@@ -193,7 +199,7 @@
     render(`
       <div class="menu-list">
         <button class="menu-btn" onclick="openWE3()">Wareneingang Prozess</button>
-        <button class="menu-btn" onclick="openWE_F7()">Wareneingang F7 Prozess</button>
+        <button class="menu-btn" onclick="openWEF7()">Wareneingang F7 Prozess</button>
       </div>
     `);
   }
@@ -208,53 +214,25 @@
         <div class="step">Scanner zeigt Info (Tour + Platz)</div>
         <div class="step">Platznummer auf Palette schreiben</div>
         <div class="step">Palette auf richtigen Platz stellen</div>
-        <div class="step">
-          Wenn kein Platz →
-          <span onclick="openCode15_fromWE3()" style="text-decoration:underline; cursor:pointer;">
-            Platzwechseln
-          </span>
-        </div>
         <div class="step">ENTER</div>
       </div>
     `);
   }
 
-  function openCode15_fromWE3(){
-    historyStack.push(openWE3);
-    openCode15();
-  }
-
-  function openWE_F7(){
+  function openWEF7(){
     historyStack.push(openWareneingang);
     setTitle('Wareneingang F7 Prozess');
     showBack(true);
     render(`
       <div class="steps-list">
         <div class="step">1 → ENTER</div>
-        <div class="step">ENTER</div>
         <div class="step">F7 drücken</div>
         <div class="step">Barcode scannen → ENTER → ENTER → ENTER</div>
-        <div class="step">Nochmal gleichen Barcode scannen</div>
-        <div class="step">Scanner zeigt Info (Tour + Platz)</div>
-        <div class="step">Platznummer auf Palette schreiben</div>
-        <div class="step">Palette auf richtigen Platz stellen</div>
-        <div class="step">
-          Wenn kein Platz →
-          <span onclick="openCode15_fromWEF7()" style="text-decoration:underline; cursor:pointer;">
-            Platzwechseln
-          </span>
-        </div>
-        <div class="step">ENTER</div>
+        <div class="step">Nochmal scannen</div>
       </div>
     `);
   }
 
-  function openCode15_fromWEF7(){
-    historyStack.push(openWE_F7);
-    openCode15();
-  }
-
-  /* --- HALLENAUFNAHME MENÜ --- */
   function openHallenaufnahme(){
     historyStack.push(goHome);
     setTitle('5.5.1 – Auswahl');
@@ -272,7 +250,6 @@
     `);
   }
 
-  /* --- CODE 5 --- */
   function openCode5(){
     historyStack.push(openHallenaufnahme);
     setTitle('5 – 2. Tour / Freigegeben');
@@ -283,16 +260,10 @@
         <div class="step">5 → ENTER</div>
         <div class="step">1 → ENTER</div>
         <div class="step">5 → ENTER</div>
-        <div class="step">Barcode scannen → ENTER</div>
-        <div class="step">Scanner zeigt Info (Tour + Platz)</div>
-        <div class="step">Palette auf Platz stellen → ENTER</div>
-        <div class="step">Platz eingeben (z. B. 226) → ENTER</div>
-        <div class="step">Nächste Palette gleich machen</div>
       </div>
     `);
   }
 
-  /* --- CODE 6 --- */
   function openCode6(){
     historyStack.push(openHallenaufnahme);
     setTitle('6 – Rausladen');
@@ -300,107 +271,62 @@
     render(`
       <div class="steps-list">
         <div class="step">5 → ENTER</div>
-        <div class="step">5 → ENTER</div>
-        <div class="step">1 → ENTER</div>
         <div class="step">6 → ENTER</div>
-        <div class="step">Barcode scannen → ENTER</div>
-        <div class="step">Brücke‑Nummer eingeben / QR‑Code scannen → ENTER</div>
       </div>
     `);
   }
 
-  /* --- CODE 7 --- */
   function openCode7(){
     historyStack.push(openHallenaufnahme);
     setTitle('7 – Entladen');
     showBack(true);
     render(`
       <div class="steps-list">
-        <div class="step">5 → ENTER</div>
-        <div class="step">5 → ENTER</div>
-        <div class="step">1 → ENTER</div>
         <div class="step">7 → ENTER</div>
-        <div class="step">Barcode scannen → ENTER</div>
-        <div class="step">Scanner zeigt Platz (z. B. 360)</div>
-        <div class="step">Palette auf Platz stellen → ENTER</div>
-        <div class="step">Platz eingeben (360) → ENTER</div>
-        <div class="step">Nächste Palette gleich machen</div>
       </div>
     `);
   }
 
-  /* --- CODE 8 --- */
   function openCode8(){
     historyStack.push(openHallenaufnahme);
     setTitle('8 – Sonderprozess Start');
     showBack(true);
     render(`
       <div class="steps-list">
-        <div class="step">5 → ENTER</div>
-        <div class="step">5 → ENTER</div>
-        <div class="step">1 → ENTER</div>
         <div class="step">8 → ENTER</div>
-        <div class="step">Barcode scannen → ENTER</div>
-        <div class="step">Scanner schreibt: Barcode ist überzählig → ENTER</div>
-        <div class="step">F10 drücken</div>
-        <div class="step">Option wählen (z. B. 9 – Reinigung) → ENTER</div>
       </div>
     `);
   }
 
-  /* --- CODE 9 --- */
   function openCode9(){
     historyStack.push(openHallenaufnahme);
     setTitle('9 – Sonderprozess Ende');
     showBack(true);
     render(`
       <div class="steps-list">
-        <div class="step">5 → ENTER</div>
-        <div class="step">5 → ENTER</div>
-        <div class="step">1 → ENTER</div>
         <div class="step">9 → ENTER</div>
-        <div class="step">Gleichen Barcode scannen wie im Start → ENTER</div>
-        <div class="step">Scanner schreibt: Barcode ist überzählig → ENTER</div>
-        <div class="step">F10 drücken</div>
-        <div class="step">Option wählen (z. B. 9 – Reinigung) → ENTER</div>
       </div>
     `);
   }
 
-  /* --- CODE 13 --- */
   function openCode13(){
     historyStack.push(openHallenaufnahme);
     setTitle('13 – Hallenaufnahme');
     showBack(true);
     render(`
       <div class="steps-list">
-        <div class="step">5 → ENTER</div>
-        <div class="step">5 → ENTER</div>
-        <div class="step">1 → ENTER</div>
         <div class="step">13 → ENTER</div>
-        <div class="step">Barcode scannen → ENTER</div>
-        <div class="step">Scanner zeigt Tour + Platz (z. B. 9336 / 220)</div>
-        <div class="step">Wenn 2. Tour / Freigegeben → letzte 2 Tour-Zahlen auf Palette schreiben → ENTER</div>
-        <div class="step">Platz eingeben (z. B. 220) → ENTER</div>
       </div>
     `);
   }
 
-  /* --- CODE 15 --- */
   function openCode15(){
+    historyStack.push(openHallenaufnahme);
     setTitle('15 – Platzwechseln');
     showBack(true);
     render(`
       <div class="steps-list">
-        <div class="step">5 → ENTER</div>
-        <div class="step">5 → ENTER</div>
-        <div class="step">1 → ENTER</div>
         <div class="step">15 → ENTER</div>
-        <div class="step">Barcode scannen → ENTER</div>
-        <div class="step">Scanner zeigt Info (Tour + Platz)</div>
-        <div class="step">Platz 224–225 voll → freien Platz suchen</div>
-        <div class="step">Palette auf freien Platz stellen → ENTER</div>
-        <div class="step">Platz eingeben (z. B. 227) → ENTER</div>
       </div>
     `);
   }
