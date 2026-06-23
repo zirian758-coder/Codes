@@ -104,11 +104,7 @@
       render(`
         <div class="menu-list">
           <button class="menu-btn" onclick="openHallenaufnahme()">1 – Hallenaufnahme</button>
-          <button class="menu-btn" onclick="openAuslagerung()">2 – Auslagerung</button>
-          <button class="menu-btn" onclick="openKommissionierung()">3 – Kommissionierung</button>
-          <button class="menu-btn" onclick="openRetouren()">4 – Retouren</button>
-          <button class="menu-btn" onclick="openScannerFehler()">5 – Scanner Fehler / Codes</button>
-          <button class="menu-btn" onclick="openPlatzCodes()">6 – Platz Codes</button>
+          <button class="menu-btn" onclick="openWareneingang()">2 – Wareneingang</button>
         </div>
       `);
     }
@@ -119,7 +115,86 @@
       last();
     }
 
-    // --- Hallenaufnahme Menü ---
+    // -------------------------
+    // WARNEINGANG MENÜ
+    // -------------------------
+    function openWareneingang(){
+      historyStack.push(goHome);
+      setTitle('Wareneingang');
+      showBack(true);
+      render(`
+        <div class="menu-list">
+          <button class="menu-btn" onclick="openWE3()">Wareneingang Prozess</button>
+          <button class="menu-btn" onclick="openWE_F7()">Wareneingang F7 Prozess</button>
+        </div>
+      `);
+    }
+
+    // -------------------------
+    // WARNEINGANG PROZESS
+    // -------------------------
+    function openWE3(){
+      historyStack.push(openWareneingang);
+      setTitle('Wareneingang Prozess');
+      showBack(true);
+      render(`
+        <div class="steps-list">
+          <div class="step">Barcode scannen → ENTER</div>
+          <div class="step">Scanner zeigt Info (Tour + Platz)</div>
+          <div class="step">Platznummer auf Palette schreiben</div>
+          <div class="step">Palette auf richtigen Platz stellen</div>
+          <div class="step">
+            Wenn kein Platz →
+            <span onclick="openCode15_fromWE3()" style="text-decoration:underline; cursor:pointer;">
+              Platzwechseln
+            </span>
+          </div>
+          <div class="step">ENTER</div>
+        </div>
+      `);
+    }
+
+    function openCode15_fromWE3(){
+      historyStack.push(openWE3);
+      openCode15();
+    }
+
+    // -------------------------
+    // WARNEINGANG F7 PROZESS
+    // -------------------------
+    function openWE_F7(){
+      historyStack.push(openWareneingang);
+      setTitle('Wareneingang F7 Prozess');
+      showBack(true);
+      render(`
+        <div class="steps-list">
+          <div class="step">1 → ENTER</div>
+          <div class="step">ENTER</div>
+          <div class="step">F7 drücken</div>
+          <div class="step">Barcode scannen → ENTER → ENTER → ENTER</div>
+          <div class="step">Nochmal gleichen Barcode scannen</div>
+          <div class="step">Scanner zeigt Info (Tour + Platz)</div>
+          <div class="step">Platznummer auf Palette schreiben</div>
+          <div class="step">Palette auf richtigen Platz stellen</div>
+          <div class="step">
+            Wenn kein Platz →
+            <span onclick="openCode15_fromWEF7()" style="text-decoration:underline; cursor:pointer;">
+              Platzwechseln
+            </span>
+          </div>
+          <div class="step">ENTER</div>
+        </div>
+      `);
+    }
+
+    function openCode15_fromWEF7(){
+      historyStack.push(openWE_F7);
+      openCode15();
+    }
+
+    // -------------------------
+    // HALLENAUFNAHME MENÜ
+    // -------------------------
     function openHallenaufnahme(){
       historyStack.push(goHome);
       setTitle('5.5.1 – Auswahl');
@@ -137,7 +212,9 @@
       `);
     }
 
-    // --- 5 ---
+    // -------------------------
+    // 5 – 2. Tour / Freigegeben
+    // -------------------------
     function openCode5(){
       historyStack.push(openHallenaufnahme);
       setTitle('5 – 2. Tour / Freigegeben');
@@ -157,7 +234,9 @@
       `);
     }
 
-    // --- 6 ---
+    // -------------------------
+    // 6 – Rausladen
+    // -------------------------
     function openCode6(){
       historyStack.push(openHallenaufnahme);
       setTitle('6 – Rausladen');
@@ -174,7 +253,9 @@
       `);
     }
 
-    // --- 7 ---
+    // -------------------------
+    // 7 – Entladen
+    // -------------------------
     function openCode7(){
       historyStack.push(openHallenaufnahme);
       setTitle('7 – Entladen');
@@ -194,7 +275,9 @@
       `);
     }
 
-    // --- 8 ---
+    // -------------------------
+    // 8 – Sonderprozess Start
+    // -------------------------
     function openCode8(){
       historyStack.push(openHallenaufnahme);
       setTitle('8 – Sonderprozess Start');
@@ -213,7 +296,9 @@
       `);
     }
 
-    // --- 9 ---
+    // -------------------------
+    // 9 – Sonderprozess Ende
+    // -------------------------
     function openCode9(){
       historyStack.push(openHallenaufnahme);
       setTitle('9 – Sonderprozess Ende');
@@ -232,7 +317,9 @@
       `);
     }
 
-    // --- 13 ---
+    // -------------------------
+    // 13 – Hallenaufnahme
+    // -------------------------
     function openCode13(){
       historyStack.push(openHallenaufnahme);
       setTitle('13 – Hallenaufnahme');
@@ -251,7 +338,9 @@
       `);
     }
 
-    // --- 15 ---
+    // -------------------------
+    // 15 – Platzwechseln
+    // -------------------------
     function openCode15(){
       historyStack.push(openHallenaufnahme);
       setTitle('15 – Platzwechseln');
@@ -270,13 +359,6 @@
         </div>
       `);
     }
-
-    // Placeholder oldalak
-    function openAuslagerung(){ historyStack.push(goHome); setTitle('Auslagerung'); showBack(true); render(`<div class="step">Später ausfüllen.</div>`); }
-    function openKommissionierung(){ historyStack.push(goHome); setTitle('Kommissionierung'); showBack(true); render(`<div class="step">Später ausfüllen.</div>`); }
-    function openRetouren(){ historyStack.push(goHome); setTitle('Retouren'); showBack(true); render(`<div class="step">Später ausfüllen.</div>`); }
-    function openScannerFehler(){ historyStack.push(goHome); setTitle('Scanner Fehler'); showBack(true); render(`<div class="step">Später ausfüllen.</div>`); }
-    function openPlatzCodes(){ historyStack.push(goHome); setTitle('Platz Codes'); showBack(true); render(`<div class="step">Später ausfüllen.</div>`); }
 
     goHome();
   </script>
