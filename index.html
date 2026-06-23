@@ -306,21 +306,22 @@
        CODE 6
     ------------------------- */
     function openCode6(){
-      historyStack.push(openHallenaufnahme);
-      setTitle('6 – Rausladen');
-      showBack(true);
-      render(`
-        <div class="steps-list">
-          <div class="step">5 → ENTER</div>
-          <div class="step">5 → ENTER</div>
-          <div class="step">1 → ENTER</div>
-          <div class="step">6 → ENTER</div>
-          <div class="step">Barcode scannen → ENTER</div>
-          <div class="step">Scanner zeigt Info (Tour + Platz) → ENTER</div>
-          <div class="step">Brücke‑Nummer eingeben / QR‑Code scannen → ENTER</div>
-        </div>
-      `);
-    }
+  historyStack.push(openHallenaufnahme);
+  setTitle('6 – Rausladen');
+  showBack(true);
+  render(`
+    <div class="steps-list" style="counter-reset: step-counter;">
+      <div class="step">5 → ENTER</div>
+      <div class="step">5 → ENTER</div>
+      <div class="step">1 → ENTER</div>
+      <div class="step">6 → ENTER</div>
+      <div class="step">Barcode scannen → ENTER</div>
+      <div class="step">Scanner zeigt Info (Tour + Platz) → ENTER</div>
+      <div class="step">Brücke‑Nummer eingeben / QR‑Code scannen → ENTER</div>
+    </div>
+  `);
+}
+
 
     /* -------------------------
        CODE 7
