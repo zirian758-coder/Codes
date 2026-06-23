@@ -1,8 +1,10 @@
-const CACHE_NAME = 'dachser-scanner-v1';
+const CACHE_NAME = 'codes-cache-v2';
 const ASSETS = [
   './',
   './index.html',
-  './manifest.webmanifest'
+  './manifest.webmanifest',
+  './icons/codes-192.png',
+  './icons/codes-512.png'
 ];
 
 self.addEventListener('install', event => {
